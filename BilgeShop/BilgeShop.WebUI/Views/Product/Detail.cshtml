@@ -1,0 +1,41 @@
+﻿@model ProductDetailViewModel
+
+<div class="card mb-3 mt-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+        @if(!string.IsNullOrWhiteSpace(Model.ImagePath))
+            {
+                <img src="~/Images/Products/@Model.ImagePath" class="img-fluid rounded-start" alt="...">
+            }
+            else
+            {
+                <img src="~/Images/NoImage.jpg" class="img-fluid rounded-start" alt="...">
+            }
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">@Model.Description</p>
+        <p class="card-text fw-bold" style="color:darkred">@Model.UnitPrice TL</p>
+
+        <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-categoryName="@Model.CategoryName" class="card-text" style="text-decoration:none"><small class="text-muted">@Model.CategoryName</small></a>
+
+                @if (Model.IsSoldOut)
+                {
+                    <div class="alert alert-danger mt-2">
+                        @Model.SoldingOutMessage
+                        </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.SoldingOutMessage) && Model.IsSoldOut == false)
+                {
+                    <div class="alert alert-warning mt-2">
+                        @Model.SoldingOutMessage
+                        </div>
+                }
+
+
+      </div>
+    </div>
+  </div>
+</div>

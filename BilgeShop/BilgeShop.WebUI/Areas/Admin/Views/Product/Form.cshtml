@@ -1,0 +1,77 @@
+﻿ @model ProductFormViewModel
+
+<div class="row">
+
+    <div class="col-8 offset-2">
+
+
+       <div class="card" style="border:solid 2px">
+
+           <div class="card-header fw-bold fs-5">
+              @(Model.Id == 0 ? "Ürün Ekleme Formu" : "Ürün Düzenleme Formu")
+           </div>
+
+
+           <div class="card-body">
+
+               <form method="post" asp-area="Admin" asp-controller="Product" asp-action="Save" enctype="multipart/form-data">
+                @*   Dosya eklemek istiyorsan, enctype kısmını unutma !*@
+                   
+                   @if(!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+                   {
+                   <div class="alert alert-danger">
+                       @ViewBag.ErrorMessage
+                   </div>
+                   }
+
+                   <input asp-for="Id" type="hidden" />
+
+               <div class="mb-2">
+                   <label asp-for="Name"></label>
+                   <input asp-for="Name"  type="text" class="form-control" />
+                   <span class="text-danger fw-bold mt-1" asp-validation-for="Name" ></span>
+               </div>
+
+               <div class="mb-2">
+                   <label asp-for="Description"></label>
+                   <input asp-for="Description" type="text" class="form-control" />
+               </div>
+
+               <div class="mb-2">
+                   <label asp-for="UnitPrice"></label>
+                   <input asp-for="UnitPrice" type="text" class="form-control" />
+               </div>
+
+               <div class="mb-2">
+                   <label asp-for="UnitInStock"></label>
+                   <input asp-for="UnitInStock" type="number" class="form-control" />
+               </div>
+
+               <div class="mb-2">
+                   <label asp-for="CategoryId"></label>
+                   <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories , "Id" , "Name"))"></select>
+                     <span class="text-danger fw-bold mt-1" asp-validation-for="CategoryId" ></span>
+               </div>
+               
+               <div class="mb-2">
+                   <label asp-for="File"></label>
+                   <input asp-for="File" type="file" class="form-control" />
+
+               </div>
+
+
+
+               <button type="submit" class="btn btn-success mt-3 float-end"> @(Model.Id == 0 ? "Kaydet" : "Güncelle")</button>
+               
+               </form>
+
+           </div>
+
+
+
+       </div>
+
+
+    </div>
+
+</div>

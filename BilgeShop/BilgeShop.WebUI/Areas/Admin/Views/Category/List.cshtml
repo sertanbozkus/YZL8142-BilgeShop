@@ -1,0 +1,56 @@
+﻿@model List<CategoryViewModel>
+
+<div>
+    <div class="float-start">  <h2>Kategoriler</h2>  </div>
+    <div class="float-end"> <a asp-area="Admin" asp-controller="Category" asp-action="New" class="btn btn-success"> Yeni Kategori </a> </div>
+
+</div>
+
+
+<div style="padding-top:75px">
+
+
+    <table id="categoryTable" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Kategori Adı</th>
+            <th>Açıklaması</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>@category.Description</td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                    <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-sm btn-danger">Sil</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+
+</div>
+
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function() {
+
+            var table = new DataTable('#categoryTable', {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.3/i18n/tr.json',
+                },
+                pageLength: 5
+            });
+
+        })
+
+    </script>
+
+ }

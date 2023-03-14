@@ -1,0 +1,143 @@
+﻿@model List<ProductViewModel>
+
+<div>
+    <div class="float-start">  <h2>Ürünler</h2>  </div>
+    <div class="float-end"> <a asp-area="Admin" asp-controller="Product" asp-action="New" class="btn btn-success"> Yeni Ürün </a> </div>
+
+</div>
+
+
+<div style="padding-top:75px">
+
+
+    <table id="productTable" class="table display">
+        <thead>
+            <tr>
+                <th style="width:150px"></th>
+                <th>Ürün Adı</th>
+                <th>Birim Fiyatı</th>
+                <th>Stok Miktarı</th>
+                <th>Kategori</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>
+                        @if (string.IsNullOrWhiteSpace(@p.ImagePath))
+                        {
+                            <img src="~/Images/NoImage.jpg" width="120" height="120" />
+                        }
+                        else
+                        {
+                            <a href="~/Images/Products/@p.ImagePath" data-lightbox="@p.CategoryName" data-title="@p.Name">
+                                <img src="~/Images/Products/@p.ImagePath" width="120" height="120" />
+                            </a>
+
+
+                        }
+
+                    </td>
+
+                    <td>@p.Name</td>
+                    <td>@p.UnitPrice</td>
+                    <td>@p.UnitInStock</td>
+                    <td>@p.CategoryName</td>
+                    <td>
+
+                        <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <a href="#" data-name="sil" data-id="@p.Id" class="btn btn-sm btn-danger delete">Sil</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function() {
+
+            var table = new DataTable('#productTable', {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.3/i18n/tr.json',
+                },
+                pageLength: 5
+            });
+
+        })
+
+
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': false,
+            'maxWidth': 400,
+            'maxHeight': 400,
+            'fitImagesInViewport': true
+
+        })
+
+
+        $('#productTable .delete').click(function(e) {
+
+            e.preventDefault(); // butonun yönlendirme işlemini engelle
+
+            var productId = $(this).data('id'); // buttonun içersine id diye gömdüğüm veriyi yakalıyorum. ( data-id='p.Id' kısmı) 
+
+
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Dikkat! Ürün silinecektir.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Onaylıyorum.',
+                cancelButtonText: 'İptal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '/admin/product/delete/' + productId,
+                        method: 'GET'
+                    }).done(function() {
+                        Swal.fire(
+                            'Silindi!',
+                            'Ürün başarıyla silindi.',
+                            'success'
+                        ).then(() => { window.location.reload() })
+                    }).fail(function() {
+                        Swal.fire(
+                            'Hata!',
+                            'ürün silinirken bir hata oluştu, silme işlemi gerçekleşemedi.',
+                            'error'
+                        )
+                    })
+
+
+                }
+            })
+        })
+
+
+    </script>
+
+ }
+
+
+    @*Lightbox içerisindeki data-title attribute'ı görsel açıldığında altında yazacak olan yazıyı belirler.
+
+data-lightbox attribute'ı aynı olan görseller arasında , slayt mantığında geçiş sağlanabilir.*@
+
+
+    @*     $.ajax görüyorsan, sayfa yenilenmeden bir yere istek atılıyor demektir.*@
